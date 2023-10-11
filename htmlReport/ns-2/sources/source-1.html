@@ -1,0 +1,170 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > GoodsDaoImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.shangan.trade.goods.db.dao.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: GoodsDaoImpl (com.shangan.trade.goods.db.dao.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GoodsDaoImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    54.5%
+  </span>
+  <span class="absValue">
+    (6/11)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GoodsDaoImpl$$EnhancerBySpringCGLIB$$7569c6dc</td>
+  </tr>
+  <tr>
+    <td class="name">GoodsDaoImpl$$EnhancerBySpringCGLIB$$7569c6dc$$FastClassBySpringCGLIB$$c6fe3f23</td>
+  </tr>
+  <tr>
+    <td class="name">GoodsDaoImpl$$EnhancerBySpringCGLIB$$787daea0</td>
+  </tr>
+  <tr>
+    <td class="name">GoodsDaoImpl$$EnhancerBySpringCGLIB$$787daea0$$FastClassBySpringCGLIB$$69c38351</td>
+  </tr>
+  <tr>
+    <td class="name">GoodsDaoImpl$$FastClassBySpringCGLIB$$14f25bc9</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (3/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    54.5%
+  </span>
+  <span class="absValue">
+    (6/11)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.shangan.trade.goods.db.dao.impl;
+&nbsp;
+&nbsp;import com.shangan.trade.goods.db.dao.GoodsDao;
+&nbsp;import com.shangan.trade.goods.db.mappers.GoodsMapper;
+&nbsp;import com.shangan.trade.goods.db.model.Goods;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;/**
+&nbsp; * 商品数据库操作
+&nbsp; */
+&nbsp;@Repository
+<b class="fc">&nbsp;public class GoodsDaoImpl implements GoodsDao {</b>
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private GoodsMapper goodsMapper;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean insertGoods(Goods goods) {
+<b class="fc">&nbsp;        int result = goodsMapper.insert(goods);</b>
+&nbsp;        //大于0 表示插入成功
+<b class="fc">&nbsp;        if (result &gt; 0) {</b>
+<b class="fc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean deleteGoods(long id) {
+<b class="nc">&nbsp;        int result = goodsMapper.deleteByPrimaryKey(id);</b>
+<b class="nc">&nbsp;        return result &gt; 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Goods queryGoodsById(long id) {
+<b class="fc">&nbsp;        Goods goods = goodsMapper.selectByPrimaryKey(id);</b>
+<b class="fc">&nbsp;        return goods;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean updateGoods(Goods goods) {
+<b class="nc">&nbsp;        int result = goodsMapper.updateByPrimaryKey(goods);</b>
+<b class="nc">&nbsp;        return result &gt; 0;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-09 13:10</div>
+</div>
+</body>
+</html>

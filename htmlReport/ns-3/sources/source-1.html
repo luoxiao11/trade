@@ -1,0 +1,220 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Goods</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.shangan.trade.goods.db.model</a>
+</div>
+
+<h1>Coverage Summary for Class: Goods (com.shangan.trade.goods.db.model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Goods</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.6%
+  </span>
+  <span class="absValue">
+    (28/29)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.6%
+  </span>
+  <span class="absValue">
+    (28/29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.shangan.trade.goods.db.model;
+&nbsp;
+&nbsp;import java.util.Date;
+&nbsp;
+<b class="fc">&nbsp;public class Goods {</b>
+&nbsp;    private Long id;
+&nbsp;    private String title;
+&nbsp;    private String number;
+&nbsp;    private String brand;
+&nbsp;    private String image;
+&nbsp;    private String description;
+&nbsp;    private Integer price;
+&nbsp;    private Integer status;
+&nbsp;    private String keywords;
+&nbsp;    private String category;
+&nbsp;    private Integer availableStock;
+&nbsp;    private Integer lockStock;
+&nbsp;    private Integer saleNum;
+&nbsp;    private Date createTime;
+&nbsp;    public Long getId() {
+<b class="fc">&nbsp;        return id;</b>
+&nbsp;    }
+&nbsp;    public void setId(Long id) {
+<b class="fc">&nbsp;        this.id = id;</b>
+&nbsp;    }
+&nbsp;    public String getTitle() {
+<b class="fc">&nbsp;        return title;</b>
+&nbsp;    }
+&nbsp;    public void setTitle(String title) {
+<b class="fc">&nbsp;        this.title = title == null ? null : title.trim();</b>
+&nbsp;    }
+&nbsp;    public String getNumber() {
+<b class="fc">&nbsp;        return number;</b>
+&nbsp;    }
+&nbsp;    public void setNumber(String number) {
+<b class="fc">&nbsp;        this.number = number == null ? null : number.trim();</b>
+&nbsp;    }
+&nbsp;    public String getBrand() {
+<b class="fc">&nbsp;        return brand;</b>
+&nbsp;    }
+&nbsp;    public void setBrand(String brand) {
+<b class="fc">&nbsp;        this.brand = brand == null ? null : brand.trim();</b>
+&nbsp;    }
+&nbsp;    public String getImage() {
+<b class="fc">&nbsp;        return image;</b>
+&nbsp;    }
+&nbsp;    public void setImage(String image) {
+<b class="fc">&nbsp;        this.image = image == null ? null : image.trim();</b>
+&nbsp;    }
+&nbsp;    public String getDescription() {
+<b class="fc">&nbsp;        return description;</b>
+&nbsp;    }
+&nbsp;    public void setDescription(String description) {
+<b class="fc">&nbsp;        this.description = description == null ? null : description.trim();</b>
+&nbsp;    }
+&nbsp;    public Integer getPrice() {
+<b class="fc">&nbsp;        return price;</b>
+&nbsp;    }
+&nbsp;    public void setPrice(Integer price) {
+<b class="fc">&nbsp;        this.price = price;</b>
+&nbsp;    }
+&nbsp;    public Integer getStatus() {
+<b class="fc">&nbsp;        return status;</b>
+&nbsp;    }
+&nbsp;    public void setStatus(Integer status) {
+<b class="fc">&nbsp;        this.status = status;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getKeywords() {
+<b class="fc">&nbsp;        return keywords;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setKeywords(String keywords) {
+<b class="fc">&nbsp;        this.keywords = keywords == null ? null : keywords.trim();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getCategory() {
+<b class="fc">&nbsp;        return category;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCategory(String category) {
+<b class="fc">&nbsp;        this.category = category == null ? null : category.trim();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Integer getAvailableStock() {
+<b class="fc">&nbsp;        return availableStock;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setAvailableStock(Integer availableStock) {
+<b class="fc">&nbsp;        this.availableStock = availableStock;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Integer getLockStock() {
+<b class="fc">&nbsp;        return lockStock;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public void setLockStock(Integer lockStock) {
+<b class="nc">&nbsp;        this.lockStock = lockStock;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Integer getSaleNum() {
+<b class="fc">&nbsp;        return saleNum;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSaleNum(Integer saleNum) {
+<b class="fc">&nbsp;        this.saleNum = saleNum;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Date getCreateTime() {
+<b class="fc">&nbsp;        return createTime;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCreateTime(Date createTime) {
+<b class="fc">&nbsp;        this.createTime = createTime;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-09 13:10</div>
+</div>
+</body>
+</html>
