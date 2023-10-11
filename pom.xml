@@ -16,10 +16,13 @@
     <properties>
         <java.version>1.8</java.version>
     </properties>
+    <packaging>pom</packaging>
     <!-- 项目组成模块 -->
     <modules>
         <module>trade-goods</module>
         <module>trade-order</module>
+        <module>trade-web-manager</module>
+        <module>trade-web-portal</module>
     </modules>
     <dependencies>
         <dependency>
