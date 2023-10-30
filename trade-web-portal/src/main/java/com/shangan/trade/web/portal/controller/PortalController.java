@@ -82,19 +82,12 @@ public class PortalController {
         try {
             Order order = orderService.createOrder(userId, goodsId);
             log.info(order.toString());
-
             resultMap.put("order", order);
             resultMap.put("resultInfo", "下单成功");
         } catch (Exception ex) {
-            resultMap.put("resultInfo", "下单失败");
+            resultMap.put("resultInfo", "下单失败,原因" + ex.getMessage());
             log.error("buy error", ex);
         }
-//        Order order = orderService.createOrder(userId, goodsId);
-//        log.info(order.toString());
-//        order.setStatus(0);
-//
-//        resultMap.put("order", order);
-//        resultMap.put("resultInfo", "下单成功");
         return "buy_result";
     }
     @RequestMapping("/order/query/{orderId}")

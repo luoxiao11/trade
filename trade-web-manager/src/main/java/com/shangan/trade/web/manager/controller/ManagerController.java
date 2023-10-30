@@ -72,6 +72,7 @@ public class ManagerController {
         goods.setKeywords(keywords);
         goods.setCategory(category);
         goods.setAvailableStock(stock);
+        goods.setLockStock(0);
         //初始为上架状态
         goods.setStatus(1);
         //初始的销售数量为0

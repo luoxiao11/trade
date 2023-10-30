@@ -18,4 +18,28 @@ public interface GoodsService {
      * @return
      */
     Goods queryGoodsById(long id);
+
+    /**
+     * 锁定商品的库存
+     *
+     * @param id
+     * @return
+     */
+    boolean lockStock(long id);
+    /**
+     * 库存扣减
+     *
+     * @param id
+     * @return
+     */
+    boolean deductStock(long id);
+
+    /**
+     * 锁定的库存回补
+     * @param id
+     * @return
+     */
+    boolean revertStock(long id);
 }
+
+

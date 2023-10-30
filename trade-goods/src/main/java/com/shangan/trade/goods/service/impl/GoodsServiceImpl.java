@@ -25,4 +25,19 @@ public class GoodsServiceImpl implements GoodsService {
     public Goods queryGoodsById(long id) {
         return goodsDao.queryGoodsById(id);
     }
+
+    @Override
+    public boolean lockStock(long id) {
+        return goodsDao.lockStock(id);
+    }
+    @Override
+    public boolean deductStock(long id) {
+        return goodsDao.deductStock(id);
+    }
+
+    @Override
+    public boolean revertStock(long id) {
+        return goodsDao.revertStock(id);
+    }
+
 }
