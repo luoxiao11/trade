@@ -24,6 +24,13 @@
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <!-- 秒杀模块 -->
+        <dependency>
+            <groupId>com.shangan</groupId>
+            <artifactId>trade-lightning-deal</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- spring 配置文件-->
         <dependency>
