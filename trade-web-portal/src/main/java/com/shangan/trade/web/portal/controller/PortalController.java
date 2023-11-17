@@ -169,15 +169,18 @@ public class PortalController {
         return "seckill_activity_list";
     }
 
-    @ResponseBody
     @RequestMapping("/seckill/buy/{userId}/{seckillId}")
-    public String seckillInfoBase(@PathVariable long seckillId) {
-         boolean res = seckillActivityService.processSeckillReqBase(seckillId);
-//        boolean res = seckillActivityService.processSeckill(seckillId);
-        if (res) {
-            return "商品抢购成功";
-        } else {
-            return "商品抢购失败，商品已经售完";
+    public ModelAndView seckill(@PathVariable long userId, @PathVariable long seckillId) {
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+            Order order = seckillActivityService.processSeckillReqBase(userId, seckillId);
+            modelAndView.addObject("resultInfo", "秒杀抢购成功");
+            modelAndView.addObject("order", order);
+            modelAndView.setViewName("buy_result");
+        } catch (Exception e) {
+            modelAndView.addObject("errorInfo", e.getMessage());
+            modelAndView.setViewName("error");
         }
+        return modelAndView;
     }
 }

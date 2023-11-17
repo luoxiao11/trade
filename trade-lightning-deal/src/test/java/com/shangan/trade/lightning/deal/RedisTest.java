@@ -30,7 +30,7 @@ public class RedisTest {
     @Test
     public void setStockTest(){
         //stock:秒杀活动 ID 库存数
-        redisWorker.setValue("stock:4", 5L);
+        redisWorker.setValue("stock:4", 100L);
         System.out.println(redisWorker.getValueByKey("stock:4"));
     }
     @Test

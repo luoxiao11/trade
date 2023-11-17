@@ -129,13 +129,14 @@ public class OrderServiceImpl implements OrderService {
         }
         System.out.println("订单支付状态更新success!!!!");
 
+
         //库存扣减
-        boolean res = goodsService.deductStock(order.getGoodsId());
-        System.out.println(order.getGoodsId());
-        System.out.println(res);
-        if (!res) {
-            log.error("orderId={} 库存扣减失败", orderId);
-            throw new RuntimeException("库存扣减失败");
+        if (order.getActivityType() == 0) {
+            //普通商品处理
+            goodsService.deductStock(order.getGoodsId());
+        } else if (order.getActivityType() == 1) {
+            //秒杀活动处理,发送支付成功消息
+            orderMessageSender.sendSeckillPaySucessMessage(JSON.toJSONString(order));
         }
     }
 

@@ -35,6 +35,12 @@ public class OrderPayCheckReceiver {
         log.info("接收时间：" + LocalDateTime.now() + "接收内容：" + msg);
         Order order = JSON.parseObject(msg, Order.class);
         /*
+         * 只处理普通商品订单
+         */
+        if (order.getActivityType() != 0) {
+            return;
+        }
+        /*
          * 状态:0,没有可用库存订单创建失败;1,已创建，等待付款;2 已支付,等待发货;99 订单关闭，超时未付款
          */
         //1.查询订单信息 , 拿到order id 后重新查一下订单状态

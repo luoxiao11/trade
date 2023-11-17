@@ -103,4 +103,82 @@ public class RabbitMqConfig {
                 null);
     }
 
+    /**
+     * 创建订单队列（普通队列）
+     *
+     * @return
+     */
+    @Bean
+    public Queue createOrderQueue() {
+        Queue queue = new Queue("create.order.queue", true, false, false);
+        return queue;
+    }
+
+
+    /**
+     * 订单状态校验，绑定
+     * 订单状态校验队列 绑定到交换机
+     *
+     * @return
+     */
+    @Bean
+    public Binding createOrderBinding() {
+        return new Binding("create.order.queue",
+                Binding.DestinationType.QUEUE,
+                "order-event-exchange",
+                "to.create.order",
+                null);
+    }
+
+    /**
+     * 秒杀订单支付状态检查消息
+     *
+     * @return
+     */
+    @Bean
+    public Queue seckillPayTimeOutCheQueue() {
+        Queue queue = new Queue("seckill.order.pay.status.check.queue", true, false, false);
+        return queue;
+    }
+
+    /**
+     * 秒杀订单支付超时 绑定
+     * 秒杀订单支付超时队列 绑定到交换机
+     *
+     * @return
+     */
+    @Bean
+    public Binding seckillPayTimeOutBinding() {
+        return new Binding("seckill.order.pay.status.check.queue",
+                Binding.DestinationType.QUEUE,
+                "order-event-exchange",
+                "order.pay.status.check",
+                null);
+    }
+    /**
+     * 秒杀订单支付成功消息
+     *
+     * @return
+     */
+    @Bean
+    public Queue seckillPaySucessQueue() {
+        Queue queue = new Queue("seckill.order.pay.success.queue", true, false, false);
+        return queue;
+    }
+
+    /**
+     * 秒杀订单支付成功 绑定
+     * 秒杀订单支付成功队列 绑定到交换机
+     *
+     * @return
+     */
+    @Bean
+    public Binding seckillPaySucessBinding() {
+        return new Binding("seckill.order.pay.success.queue",
+                Binding.DestinationType.QUEUE,
+                "order-event-exchange",
+                "seckill.order.pay.success",
+                null);
+    }
+
 }
