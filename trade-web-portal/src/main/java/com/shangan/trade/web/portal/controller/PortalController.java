@@ -6,18 +6,20 @@ import com.shangan.trade.goods.service.GoodsService;
 import com.shangan.trade.goods.service.SearchService;
 import com.shangan.trade.lightning.deal.db.model.SeckillActivity;
 import com.shangan.trade.lightning.deal.service.SeckillActivityService;
+import com.shangan.trade.lightning.deal.utils.RedisWorker;
 import com.shangan.trade.order.db.model.Order;
 import com.shangan.trade.order.service.OrderService;
 import com.shangan.trade.web.portal.util.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.rmi.CORBA.Util;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +34,9 @@ public class PortalController {
     private OrderService orderService;
     @Autowired
     private SeckillActivityService seckillActivityService;
+
+    @Autowired
+    private RedisWorker redisWorker;
     /**
      * 商品详情页
      *
@@ -89,9 +94,11 @@ public class PortalController {
             log.info(order.toString());
             resultMap.put("order", order);
             resultMap.put("resultInfo", "下单成功");
-        } catch (Exception ex) {
-            resultMap.put("resultInfo", "下单失败,原因" + ex.getMessage());
-            log.error("buy error", ex);
+        } catch (Exception e) {
+            resultMap.put("resultInfo", "下单失败,原因" + e.getMessage());
+            log.error("buy error", e);
+
+            resultMap.put("errorInfo", e.getMessage());
         }
         return "buy_result";
     }
@@ -130,8 +137,18 @@ public class PortalController {
      */
     @RequestMapping("/seckill/{seckillId}")
     public String seckillInfo(Map<String, Object> resultMap, @PathVariable long seckillId) {
+        long startTime = System.nanoTime();
         try {
-            SeckillActivity seckillActivity = seckillActivityService.querySeckillActivityById(seckillId);
+            SeckillActivity seckillActivity;
+            String seckillActivityInfo = redisWorker.getValueByKey("seckillActivity:" +seckillId);
+            if(!StringUtils.isEmpty(seckillActivityInfo)) {
+                //从redis查询到数据
+                seckillActivity = JSON.parseObject(seckillActivityInfo, SeckillActivity.class);
+                log.info("命中秒杀活动缓存:{}", seckillActivityInfo);
+
+            } else {
+                seckillActivity = seckillActivityService.querySeckillActivityById(seckillId);
+            }
             if (seckillActivity == null) {
                 log.error("秒杀的对应的活动信息 没有查询到 seckillId:{} ", seckillId);
                 throw new RuntimeException("秒杀的对应的活动信息 没有查询到");
@@ -139,7 +156,17 @@ public class PortalController {
             log.info("seckillId={},seckillActivity={}", seckillId, JSON.toJSON(seckillActivity));
             String seckillPrice = CommonUtils.changeF2Y(seckillActivity.getSeckillPrice());
             String oldPrice = CommonUtils.changeF2Y(seckillActivity.getOldPrice());
-            Goods goods = goodsService.queryGoodsById(seckillActivity.getGoodsId());
+
+            // 查询商品信息
+            Goods goods;
+            String goodsInfo = redisWorker.getValueByKey("seckillActivity_goods:" + seckillActivity.getGoodsId());
+            if (!StringUtils.isEmpty(goodsInfo)) {
+                //从redis查询到数据
+                goods = JSON.parseObject(goodsInfo, Goods.class);
+                log.info("命中商品缓存:{}", goodsInfo);
+            } else {
+                goods = goodsService.queryGoodsById(seckillActivity.getGoodsId());
+            }
             if (goods == null) {
                 log.error("秒杀的对应的商品信息 没有查询到 seckillId:{} goodsId:{}", seckillId, seckillActivity.getGoodsId());
                 throw new RuntimeException("秒杀的对应的商品信息 没有查询到");
@@ -154,6 +181,11 @@ public class PortalController {
             log.error("获取秒杀信息详情页失败 get seckillInfo error,errorMessage:{}", e.getMessage());
             resultMap.put("errorInfo", e.getMessage());
             return "error";
+        } finally {
+            long endTime = System.nanoTime();
+            log.info("seckillInfo process time : {}", endTime - startTime);
+
+
         }
     }
     /**
@@ -182,5 +214,23 @@ public class PortalController {
             modelAndView.setViewName("error");
         }
         return modelAndView;
+    }
+
+
+    /**
+     * 秒杀活动静态详情页
+     *
+     * @param seckillId
+     * @return
+     */
+    @RequestMapping("/seckill/static/{seckillId}")
+    public String seckillInfoStatic (@PathVariable long seckillId){
+        long startTime = System.nanoTime();
+        try {
+            return "seckill_item_" + seckillId;
+        }finally {
+            long endTime = System.nanoTime();
+            log.info("seckillInfo process time : {}", endTime - startTime);
+        }
     }
 }

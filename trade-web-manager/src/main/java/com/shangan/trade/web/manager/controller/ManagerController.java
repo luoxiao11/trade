@@ -157,4 +157,27 @@ public class ManagerController {
         //return "add_skill_activity";
     }
 
+    /**
+     * 跳转到推送缓存预热页面
+     *
+     * @return
+     */
+    @RequestMapping("/pushSeckillCache")
+    public String pushSeckillCache() {
+        return "push_seckill_cache";
+    }
+
+    /**
+     * 将对应的秒杀活动信息写入缓存中
+     * @param seckillId
+     * @return
+     */
+    @RequestMapping("/pushSeckillCacheAction")
+    public String pushSkilCache(@RequestParam("seckillId") long seckillId) {
+        //将秒杀库存写入缓存中
+        seckillActivityService.pushSeckillActivityInfoToCache(seckillId);
+        return "push_seckill_cache";
+    }
+
+
 }

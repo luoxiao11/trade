@@ -39,6 +39,13 @@ public class RedisTest {
         System.out.println(redisWorker.getValueByKey("stock:4"));
     }
 
+    @Test
+    public void getCacheTest(){
+        System.out.println(redisWorker.getValueByKey("stock:4"));
+        System.out.println(redisWorker.getValueByKey("seckillActivity:4"));
+        System.out.println(redisWorker.getValueByKey("seckillActivity_goods:26"));
 
+
+    }
 
 }
