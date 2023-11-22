@@ -1,7 +1,7 @@
 package com.shangan.trade.lightning.deal.service;
 
+import com.shangan.trade.lightning.deal.client.model.Order;
 import com.shangan.trade.lightning.deal.db.model.SeckillActivity;
-import com.shangan.trade.order.db.model.Order;
 
 import java.util.List;
 

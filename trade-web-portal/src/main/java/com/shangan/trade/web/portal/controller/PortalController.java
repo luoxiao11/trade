@@ -1,14 +1,14 @@
 package com.shangan.trade.web.portal.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.shangan.trade.goods.db.model.Goods;
-import com.shangan.trade.goods.service.GoodsService;
-import com.shangan.trade.goods.service.SearchService;
-import com.shangan.trade.lightning.deal.db.model.SeckillActivity;
-import com.shangan.trade.lightning.deal.service.SeckillActivityService;
-import com.shangan.trade.lightning.deal.utils.RedisWorker;
-import com.shangan.trade.order.db.model.Order;
-import com.shangan.trade.order.service.OrderService;
+import com.shangan.trade.common.model.TradeResultDTO;
+import com.shangan.trade.common.utils.RedisWorker;
+import com.shangan.trade.web.portal.client.GoodsFeignClient;
+import com.shangan.trade.web.portal.client.OrderFeignClient;
+import com.shangan.trade.web.portal.client.SeckillActivityFeignClient;
+import com.shangan.trade.web.portal.client.model.Goods;
+import com.shangan.trade.web.portal.client.model.Order;
+import com.shangan.trade.web.portal.client.model.SeckillActivity;
 import com.shangan.trade.web.portal.util.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +27,11 @@ import java.util.Map;
 @Controller
 public class PortalController {
     @Autowired
-    private GoodsService goodsService;
+    private GoodsFeignClient goodsFeignClient;
     @Autowired
-    private SearchService searchService;
+    private OrderFeignClient orderFeignClient;
     @Autowired
-    private OrderService orderService;
-    @Autowired
-    private SeckillActivityService seckillActivityService;
+    private SeckillActivityFeignClient seckillActivityFeignClient;
 
     @Autowired
     private RedisWorker redisWorker;
@@ -45,7 +43,7 @@ public class PortalController {
      */
     @RequestMapping("/goods/{goodsId}")
     public ModelAndView itemPage(@PathVariable long goodsId) {
-        Goods goods = goodsService.queryGoodsById(goodsId);
+        Goods goods = goodsFeignClient.queryGoodsById(goodsId);
         log.info("goodsId={},good s={}", goodsId, JSON.toJSON(goods));
         String showPrice = CommonUtils.changeF2Y(goods.getPrice());
         ModelAndView modelAndView = new ModelAndView();
@@ -74,7 +72,7 @@ public class PortalController {
     @RequestMapping("/searchAction")
     public String search(@RequestParam("searchWords") String searchWords, Map<String, Object> resultMap) {
         log.info("search searchWords:{}", searchWords);
-        List<Goods> goodsList = searchService.searchGoodsList(searchWords, 0, 10);
+        List<Goods> goodsList = goodsFeignClient.searchGoodsList(searchWords, 0, 10);
         resultMap.put("goodsList", goodsList);
         return "search";
     }
@@ -90,7 +88,7 @@ public class PortalController {
     public String buy(Map<String, Object> resultMap, @PathVariable long userId, @PathVariable long goodsId) {
         log.info("userId={}, goodsId={}", userId, goodsId);
         try {
-            Order order = orderService.createOrder(userId, goodsId);
+            Order order = orderFeignClient.createOrder(userId, goodsId);
             log.info(order.toString());
             resultMap.put("order", order);
             resultMap.put("resultInfo", "下单成功");
@@ -104,7 +102,7 @@ public class PortalController {
     }
     @RequestMapping("/order/query/{orderId}")
     public String orderQuery(Map<String, Object> resultMap, @PathVariable long orderId) {
-        Order order = orderService.queryOrder(orderId);
+        Order order = orderFeignClient.queryOrder(orderId);
         log.info("orderId={} order={}", orderId, JSON.toJSON(order));
         String orderShowPrice = CommonUtils.changeF2Y(order.getPayPrice());
         resultMap.put("order", order);
@@ -119,7 +117,7 @@ public class PortalController {
     @RequestMapping("/order/payOrder/{orderId}")
     public String payOrder(Map<String, Object> resultMap, @PathVariable long orderId) throws Exception {
         try {
-            orderService.payOrder(orderId);
+            orderFeignClient.payOrder(orderId);
             return "redirect:/order/query/" + orderId;
         } catch (Exception e) {
             log.error("payOrder error,errorMessage:{}", e.getMessage());
@@ -147,7 +145,7 @@ public class PortalController {
                 log.info("命中秒杀活动缓存:{}", seckillActivityInfo);
 
             } else {
-                seckillActivity = seckillActivityService.querySeckillActivityById(seckillId);
+                seckillActivity = seckillActivityFeignClient.querySeckillActivityById(seckillId);
             }
             if (seckillActivity == null) {
                 log.error("秒杀的对应的活动信息 没有查询到 seckillId:{} ", seckillId);
@@ -165,7 +163,7 @@ public class PortalController {
                 goods = JSON.parseObject(goodsInfo, Goods.class);
                 log.info("命中商品缓存:{}", goodsInfo);
             } else {
-                goods = goodsService.queryGoodsById(seckillActivity.getGoodsId());
+                goods = goodsFeignClient.queryGoodsById(seckillActivity.getGoodsId());
             }
             if (goods == null) {
                 log.error("秒杀的对应的商品信息 没有查询到 seckillId:{} goodsId:{}", seckillId, seckillActivity.getGoodsId());
@@ -196,7 +194,7 @@ public class PortalController {
      */
     @RequestMapping("/seckill/list")
     public String activityList(Map<String, Object> resultMap) {
-        List<SeckillActivity> seckillActivities = seckillActivityService.queryActivityByStatus(1);
+        List<SeckillActivity> seckillActivities = seckillActivityFeignClient.queryActivityByStatus(1);
         resultMap.put("seckillActivities", seckillActivities);
         return "seckill_activity_list";
     }
@@ -205,10 +203,16 @@ public class PortalController {
     public ModelAndView seckill(@PathVariable long userId, @PathVariable long seckillId) {
         ModelAndView modelAndView = new ModelAndView();
         try {
-            Order order = seckillActivityService.processSeckillReqBase(userId, seckillId);
-            modelAndView.addObject("resultInfo", "秒杀抢购成功");
-            modelAndView.addObject("order", order);
-            modelAndView.setViewName("buy_result");
+            TradeResultDTO<Order> result = seckillActivityFeignClient.processSeckill(userId, seckillId);
+            if (result.getCode() == 200) {
+                modelAndView.addObject("resultInfo", "秒杀抢购成功");
+                modelAndView.addObject("order", result.getData());
+                modelAndView.setViewName("buy_result");
+            } else {
+                modelAndView.addObject("errorInfo", result.getErrorMessage());
+                modelAndView.setViewName("error");
+            }
+
         } catch (Exception e) {
             modelAndView.addObject("errorInfo", e.getMessage());
             modelAndView.setViewName("error");

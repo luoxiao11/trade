@@ -1,10 +1,11 @@
 package com.shangan.trade.web.manager.controller;
 
 
-import com.shangan.trade.goods.db.model.Goods;
-import com.shangan.trade.goods.service.GoodsService;
-import com.shangan.trade.lightning.deal.db.model.SeckillActivity;
-import com.shangan.trade.lightning.deal.service.SeckillActivityService;
+
+import com.shangan.trade.web.manager.client.GoodsFeignClient;
+import com.shangan.trade.web.manager.client.SeckillActivityFeignClient;
+import com.shangan.trade.web.manager.client.model.Goods;
+import com.shangan.trade.web.manager.client.model.SeckillActivity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,9 +21,9 @@ import java.util.Map;
 public class ManagerController {
 
     @Autowired
-    private GoodsService goodsService;
+    private GoodsFeignClient goodsFeignClient;
     @Autowired
-    private SeckillActivityService seckillActivityService;
+    private SeckillActivityFeignClient seckillActivityFeignClient;
 
     /**
      * 跳转到主页面
@@ -83,7 +84,7 @@ public class ManagerController {
         //初始的销售数量为0
         goods.setSaleNum(0);
         goods.setCreateTime(new Date());
-        boolean result = goodsService.insertGoods(goods);
+        boolean result = goodsFeignClient.insertGoods(goods);
         log.info("add goods /result={}", result);
         resultMap.put("goodsInfo", goods);
         return "add_goods";
@@ -143,12 +144,9 @@ public class ManagerController {
             seckillActivity.setOldPrice(oldPrice);
             seckillActivity.setCreateTime(new Date());
             System.out.println(seckillActivity);
-            seckillActivityService.insertSeckillActivity(seckillActivity);
-            System.out.println("=====2");
+            seckillActivityFeignClient.insertSeckillActivity(seckillActivity);
             resultMap.put("seckillActivity", seckillActivity);
-            System.out.println("=====3");
-            //return "add_skill_activity";
-            return "add_goods";
+            return "add_skill_activity";
 
         } catch (Exception e) {
             log.error("addSkillActivityAction error", e);
@@ -175,9 +173,8 @@ public class ManagerController {
     @RequestMapping("/pushSeckillCacheAction")
     public String pushSkilCache(@RequestParam("seckillId") long seckillId) {
         //将秒杀库存写入缓存中
-        seckillActivityService.pushSeckillActivityInfoToCache(seckillId);
+        seckillActivityFeignClient.pushSeckillActivityInfoToCache(seckillId);
         return "push_seckill_cache";
     }
-
 
 }

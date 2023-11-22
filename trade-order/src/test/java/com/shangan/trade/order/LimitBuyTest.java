@@ -1,7 +1,7 @@
 package com.shangan.trade.order;
 
-import com.shangan.trade.order.service.LimitBuyService;
-import com.shangan.trade.order.service.RiskBlackListService;
+import com.shangan.trade.common.service.LimitBuyService;
+import com.shangan.trade.order.service.impl.RiskBlackListService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

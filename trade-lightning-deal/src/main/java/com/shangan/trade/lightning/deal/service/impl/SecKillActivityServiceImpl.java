@@ -1,16 +1,17 @@
 package com.shangan.trade.lightning.deal.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.shangan.trade.goods.db.model.Goods;
-import com.shangan.trade.goods.service.GoodsService;
+import com.shangan.trade.common.service.LimitBuyService;
+import com.shangan.trade.common.utils.RedisWorker;
+import com.shangan.trade.common.utils.SnowflakeIdWorker;
+import com.shangan.trade.lightning.deal.client.GoodsFeignClient;
+import com.shangan.trade.lightning.deal.client.OrderFeignClient;
+import com.shangan.trade.lightning.deal.client.model.Goods;
+import com.shangan.trade.lightning.deal.client.model.Order;
 import com.shangan.trade.lightning.deal.db.dao.SeckillActivityDao;
 import com.shangan.trade.lightning.deal.db.model.SeckillActivity;
+import com.shangan.trade.lightning.deal.mq.OrderMessageSender;
 import com.shangan.trade.lightning.deal.service.SeckillActivityService;
-import com.shangan.trade.lightning.deal.utils.RedisWorker;
-import com.shangan.trade.order.db.model.Order;
-import com.shangan.trade.order.mq.OrderMessageSender;
-import com.shangan.trade.order.service.LimitBuyService;
-import com.shangan.trade.order.utils.SnowflakeIdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,8 @@ public class SecKillActivityServiceImpl implements SeckillActivityService {
 
     @Autowired
     private RedisWorker redisWorker;
+    @Autowired
+    private OrderMessageSender orderMessageSender;
 
     /**
      * datacenterId;  数据中心
@@ -39,9 +42,7 @@ public class SecKillActivityServiceImpl implements SeckillActivityService {
     private final SnowflakeIdWorker snowFlake = new SnowflakeIdWorker(6, 8);
 
     @Autowired
-    private OrderMessageSender orderMessageSender;
-    @Autowired
-    private GoodsService goodsService;
+    private GoodsFeignClient goodsFeignClient;
 
     @Override
     public boolean insertSeckillActivity(SeckillActivity seckillActivity) {
@@ -143,7 +144,7 @@ public class SecKillActivityServiceImpl implements SeckillActivityService {
         redisWorker.setValue("seckillActivity:" + seckillActivity.getId(), JSON.toJSONString(seckillActivity));
 
         //活动对应的商品信息
-        Goods goods = goodsService.queryGoodsById(seckillActivity.getGoodsId());
+        Goods goods = goodsFeignClient.queryGoodsById(seckillActivity.getGoodsId());
         redisWorker.setValue("seckillActivity_goods:" + seckillActivity.getGoodsId(), JSON.toJSONString(goods));
     }
 }

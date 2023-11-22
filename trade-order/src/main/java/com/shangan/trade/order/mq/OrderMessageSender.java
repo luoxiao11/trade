@@ -16,7 +16,7 @@ public class OrderMessageSender {
 
     /**
      * 发送检查订单状态延迟消息
-     * @param message
+     * @param msg
      */
     public void sendPayStatusCheckDelayMessage(String msg) {
         log.info("发送订单创建完成，支付状态确认消息:{}", msg);

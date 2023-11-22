@@ -1,7 +1,7 @@
 package com.shangan.trade.order.mq;
 
 import com.alibaba.fastjson.JSON;
-import com.shangan.trade.goods.service.GoodsService;
+import com.shangan.trade.order.client.GoodsFeignClient;
 import com.shangan.trade.order.db.dao.OrderDao;
 import com.shangan.trade.order.db.model.Order;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class OrderPayCheckReceiver {
     @Autowired
     private OrderDao orderDao;
     @Autowired
-    private GoodsService goodsService;
+    private GoodsFeignClient goodsFeignClient;
 
     @Transactional(rollbackFor = Exception.class)
     @RabbitListener(queues = "order.pay.status.check.queue")
@@ -55,7 +55,7 @@ public class OrderPayCheckReceiver {
             //3.更新订单状态为关闭
             orderDao.updateOrder(orderInfo);
             //4.将锁定的库存回补
-            goodsService.revertStock(orderInfo.getGoodsId());
+            goodsFeignClient.revertStock(orderInfo.getGoodsId());
         }
 
     }

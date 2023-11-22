@@ -1,8 +1,9 @@
 package com.shangan.trade.web.portal.service;
-import com.shangan.trade.goods.db.model.Goods;
-import com.shangan.trade.goods.service.GoodsService;
-import com.shangan.trade.lightning.deal.db.model.SeckillActivity;
-import com.shangan.trade.lightning.deal.service.SeckillActivityService;
+
+import com.shangan.trade.web.portal.client.GoodsFeignClient;
+import com.shangan.trade.web.portal.client.SeckillActivityFeignClient;
+import com.shangan.trade.web.portal.client.model.Goods;
+import com.shangan.trade.web.portal.client.model.SeckillActivity;
 import com.shangan.trade.web.portal.util.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,10 @@ import java.util.Map;
 public class StaticPageService {
 
     @Autowired
-    private SeckillActivityService seckillActivityService;
+    private SeckillActivityFeignClient seckillActivityFeignClient;
 
     @Autowired
-    private GoodsService goodsService;
+    private GoodsFeignClient goodsFeignClient;
 
     @Autowired
     private TemplateEngine templateEngine;
@@ -37,8 +38,8 @@ public class StaticPageService {
         PrintWriter writer = null;
         try {
             //1.查询秒杀详情页所需要数据
-            SeckillActivity seckillActivity = seckillActivityService.querySeckillActivityById(seckillActivityId);
-            Goods goodsInfo = goodsService.queryGoodsById(seckillActivity.getGoodsId());
+            SeckillActivity seckillActivity = seckillActivityFeignClient.querySeckillActivityById(seckillActivityId);
+            Goods goodsInfo = goodsFeignClient.queryGoodsById(seckillActivity.getGoodsId());
             String seckillPrice = CommonUtils.changeF2Y(seckillActivity.getSeckillPrice());
             String oldPrice = CommonUtils.changeF2Y(seckillActivity.getOldPrice());
 

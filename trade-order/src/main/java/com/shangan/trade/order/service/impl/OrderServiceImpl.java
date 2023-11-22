@@ -1,14 +1,12 @@
 package com.shangan.trade.order.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.shangan.trade.goods.db.dao.GoodsDao;
-import com.shangan.trade.goods.db.model.Goods;
-import com.shangan.trade.goods.service.GoodsService;
+import com.shangan.trade.order.client.GoodsFeignClient;
+import com.shangan.trade.order.client.model.Goods;
 import com.shangan.trade.order.db.dao.OrderDao;
 import com.shangan.trade.order.db.model.Order;
 import com.shangan.trade.order.mq.OrderMessageSender;
 import com.shangan.trade.order.service.OrderService;
-import com.shangan.trade.order.service.RiskBlackListService;
 import com.shangan.trade.order.utils.SnowflakeIdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +20,14 @@ import java.util.Date;
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
-    private GoodsDao goodsDao;
+    private GoodsFeignClient goodsFeignClient;
+
     @Autowired
     private OrderDao orderDao;
+
     @Autowired
     private OrderMessageSender orderMessageSender;
-    @Autowired
-    private GoodsService goodsService;
+
     @Autowired
     private RiskBlackListService riskBlackListService;
 
@@ -71,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(1);
         order.setCreateTime(new Date());
         //1.商品查询
-        Goods goods = goodsDao.queryGoodsById(goodsId);
+        Goods goods = goodsFeignClient.queryGoodsById(goodsId);
         if (goods == null) {
             log.error("goods is null goodsId={},userId={}", goodsId, userId);
             throw new RuntimeException("goods does not exist goodsId");
@@ -82,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Insufficient Product Stock");
         }
         //3.锁定库存
-        boolean lockResult = goodsService.lockStock(goodsId);
+        boolean lockResult = goodsFeignClient.lockStock(goodsId);
         if(!lockResult) {
             log.error("order lock stock error order-{}", JSON.toJSONString(order));
             throw new RuntimeException("Inventory Locking for the Order Failed.");
@@ -143,7 +142,7 @@ public class OrderServiceImpl implements OrderService {
         //库存扣减
         if (order.getActivityType() == 0) {
             //普通商品处理
-            goodsService.deductStock(order.getGoodsId());
+            goodsFeignClient.deductStock(order.getGoodsId());
         } else if (order.getActivityType() == 1) {
             //秒杀活动处理,发送支付成功消息
             orderMessageSender.sendSeckillPaySucessMessage(JSON.toJSONString(order));
@@ -152,7 +151,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean updateOrder(Order order) {
-        return false;
+
+        return orderDao.updateOrder(order);
+
     }
 
 }
