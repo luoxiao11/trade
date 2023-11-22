@@ -10,7 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableFeignClients
 @ComponentScan(basePackages = {"com.shangan"})
-@MapperScan({"com.shangan.trade.goods.db.mappers","com.shangan.trade.lightning.deal.db.mappers"})
+//@MapperScan({"com.shangan.trade.goods.db.mappers","com.shangan.trade.lightning.deal.db.mappers"})
+
 @SpringBootApplication
 public class TradeWebManagerApplication {
 
