@@ -87,14 +87,25 @@ public class OrderServiceImpl implements OrderService {
             log.error("order insert error order={}", JSON.toJSONString(order));
             throw new RuntimeException("订单生成失败");
         }
+        //5.发送订单支付状态检查消息
+        orderMessageSender.sendPayStatusCheckDelayMessage(JSON.toJSONString(order));
         return order;
     }
 
+    /**
+     * 查询订单信息
+     * @param orderId
+     * @return
+     */
     @Override
     public Order queryOrder(long orderId) {
         return orderDao.queryOrderById(orderId);
     }
 
+    /**
+     * 订单支付
+     * @param orderId
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void payOrder(long orderId) {
@@ -123,8 +134,8 @@ public class OrderServiceImpl implements OrderService {
          * 2:支付完成
          */
         order.setStatus(2);
-        boolean updateRessult = orderDao.updateOrder(order);
-        if (!updateRessult) {
+        boolean updateResult = orderDao.updateOrder(order);
+        if (!updateResult) {
             log.error("orderId={} 订单支付状态更新失败", orderId);
             throw new RuntimeException("订单支付状态更新失败");
         }
