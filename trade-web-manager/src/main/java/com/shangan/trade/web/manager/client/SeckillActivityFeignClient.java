@@ -23,7 +23,7 @@ public interface SeckillActivityFeignClient {
     @RequestMapping("/seckill/insertSeckillActivity")
    // boolean insertSeckillActivity(@RequestParam("seckillActivity") SeckillActivity seckillActivity);
     boolean insertSeckillActivity(@RequestBody SeckillActivity seckillActivity);
-
+     //test
     /**
      * 查询秒杀活动
      *
