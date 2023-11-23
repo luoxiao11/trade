@@ -2,6 +2,7 @@ package com.shangan.trade.web.manager.controller;
 
 
 
+import com.alibaba.fastjson.JSON;
 import com.shangan.trade.web.manager.client.GoodsFeignClient;
 import com.shangan.trade.web.manager.client.SeckillActivityFeignClient;
 import com.shangan.trade.web.manager.client.model.Goods;
@@ -144,6 +145,7 @@ public class ManagerController {
             seckillActivity.setOldPrice(oldPrice);
             seckillActivity.setCreateTime(new Date());
             System.out.println(seckillActivity);
+            log.info("insert seckillActivity:{}", JSON.toJSON(seckillActivity));
             seckillActivityFeignClient.insertSeckillActivity(seckillActivity);
             resultMap.put("seckillActivity", seckillActivity);
             return "add_skill_activity";

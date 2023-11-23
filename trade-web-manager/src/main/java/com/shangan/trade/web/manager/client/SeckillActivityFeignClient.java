@@ -4,6 +4,7 @@ package com.shangan.trade.web.manager.client;
 import com.shangan.trade.web.manager.client.model.Order;
 import com.shangan.trade.web.manager.client.model.SeckillActivity;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -20,7 +21,8 @@ public interface SeckillActivityFeignClient {
      * @return
      */
     @RequestMapping("/seckill/insertSeckillActivity")
-    boolean insertSeckillActivity(@RequestParam("seckillActivity") SeckillActivity seckillActivity);
+   // boolean insertSeckillActivity(@RequestParam("seckillActivity") SeckillActivity seckillActivity);
+    boolean insertSeckillActivity(@RequestBody SeckillActivity seckillActivity);
 
     /**
      * 查询秒杀活动
