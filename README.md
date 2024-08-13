@@ -7,8 +7,9 @@ Developed a web service for limited-time offers, designed to handle 100K QPS and
 
 1. **distributed system**:
 
-- Implemented a microservices architecture and distributed system for dynamic capacity expansion of seckill services during Black Friday using Spring Cloud and Consul.
+- Implemented a microservices architecture and distributed system for dynamic capacity expansion of seckill services during Black Friday using Spring Cloud as the framework, with Consul as the service registry and OpenFeign for RPC service calls.
 
+![JmeterConfigue141](img/1.consul.png)
 
 
 2.  **Elasticsearch**
